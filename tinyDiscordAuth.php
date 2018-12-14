@@ -13,6 +13,7 @@
 
 // https://discordapp.com/developers/docs/topics/oauth2
 // https://discordapi.com/permissions.html
+
 class tinyDSAuth
 {
 
@@ -168,6 +169,11 @@ class tinyDSAuth
             "state" => $httpcode,
         );
 
+    }
+
+    public function getState($time)
+    {
+        return $this->state;
     }
 
     public function getExpiration($time)
