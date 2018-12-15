@@ -162,7 +162,7 @@ class tinyDS_OAuth2
         return array(
             "data" => $tinyresult,
             "err" => $tinyerror,
-            "state" => $httpcode
+            "state" => $httpcode,
         );
 
     }
@@ -174,7 +174,7 @@ class tinyDS_OAuth2
         curl_setopt_array($info, array(
             CURLOPT_URL => "https://discordapp.com/api/" . $data['type'],
             CURLOPT_HTTPHEADER => array(
-                "Authorization: Bearer " . $data['token']
+                "Authorization: Bearer " . $data['token'],
             ),
             CURLOPT_RETURNTRANSFER => true,
         ));
@@ -195,7 +195,7 @@ class tinyDS_OAuth2
 
             $newtoken = $this->refreshToken($data['refresh']);
             return $this->getUser(array(
-                'token' => $newtoken['data']->access_token, 'type' => $data['type'], 'refreshToken' => $newtoken
+                'token' => $newtoken['data']->access_token, 'type' => $data['type'], 'refreshToken' => $newtoken,
             ));
 
         } else {
@@ -208,7 +208,7 @@ class tinyDS_OAuth2
                 "data" => $tinyresult,
                 "err" => $tinyerror,
                 "state" => $httpcode,
-                "refresh" => $data['refreshToken']
+                "refresh" => $data['refreshToken'],
             );
 
         }
@@ -290,7 +290,7 @@ class tinyDS_OAuth2
                 "client_secret" => $secret,
                 "redirect_uri" => $redirect,
                 "refresh_token" => $refresh,
-                "scope" => $scope
+                "scope" => $scope,
             ),
             CURLOPT_RETURNTRANSFER => true,
         ));
@@ -310,8 +310,35 @@ class tinyDS_OAuth2
         return array(
             "data" => $tinyresult,
             "err" => $tinyerror,
-            "state" => $httpcode
+            "state" => $httpcode,
         );
+
+    }
+
+    public function revokeToken($data)
+    {
+
+        $revoke = $data;
+        $info = curl_init();
+
+        curl_setopt_array($info, array(
+            CURLOPT_URL => "https://discordapp.com/api/oauth2/token/revoke?token=" . $revoke,
+            CURLOPT_RETURNTRANSFER => true,
+        ));
+
+        $tinyresult = curl_exec($info);
+        if ($tinyresult == false) {
+            $tinyerror = curl_error($info);
+        } else {
+            $tinyerror = null;
+            $tinyresult = json_decode($tinyresult);
+        }
+
+        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+
+        curl_close($info);
+
+        return $httpcode;
 
     }
 
