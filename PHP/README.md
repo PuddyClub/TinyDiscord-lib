@@ -72,6 +72,16 @@ refresh: The token refresh code received from getToken
 $token = $tinyDiscord->refreshToken($_GET['refresh']);
 ```
 
+### Revoke Token
+
+Use this function to revoke your token. The value returned is the HTTP Code
+
+revoke: The token refresh code received from getToken
+
+```php
+$revoke = tinyDS_OAuth2::revokeToken($_GET['revoke']);
+```
+
 ### Get User Data
 
 Use this function to call the user info using your token
@@ -108,6 +118,14 @@ tinyDS_OAuth2::getUser(array(
     ));
 
     // is Token? Use the token here to test
+    
+    if (isset($_GET['revoke'])) {
+
+        echo '<pre>';
+        print_r(tinyDS_OAuth2::revokeToken($_GET['revoke']));
+        echo '</pre>';
+
+    } else
     
     if (isset($_GET['refresh'])) {
 
