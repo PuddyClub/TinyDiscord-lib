@@ -25,6 +25,24 @@ class tinyDSAuth
     protected $state;
     protected $expire;
 
+    public function getScope($data = null)
+    {
+
+        $scopeFinal = '';
+        for ($i = 0; $i < count($data); $i++) {
+
+            if ($i > 0) {
+                $scopeFinal = $scopeFinal . '%20' . $data[$i];
+            } else {
+                $scopeFinal = $data[$i];
+            }
+
+        }
+
+        return $scopeFinal;
+
+    }
+
     public function __construct($data)
     {
 
@@ -51,20 +69,9 @@ class tinyDSAuth
         }
 
         if (is_string($data['scope']) == false) {
-
-            $scopeFinal = '';
-            for ($i = 0; $i < count($data['scope']); $i++) {
-
-                if ($i > 0) {
-                    $scopeFinal = $scopeFinal . '%20' . $data['scope'][$i];
-                } else {
-                    $scopeFinal = $data['scope'][$i];
-                }
-
-            }
-
+            $scope = $this->getScope($data['scope']);
         } else {
-            $scopeFinal = $scope;
+            $scope = '';
         }
 
         if (is_string($data['state']) == true) {
@@ -73,7 +80,7 @@ class tinyDSAuth
             $state = '';
         }
 
-        return "https://discordapp.com/oauth2/authorize?client_id=" . $data['clientID'] . "&scope=" . $scopeFinal . $state . "&response_type=code&redirect_uri=" . urlencode($data['redirect']) . "&permissions=" . $data['permissions'];
+        return "https://discordapp.com/oauth2/authorize?client_id=" . $data['clientID'] . "&scope=" . $scope . $state . "&response_type=code&redirect_uri=" . urlencode($data['redirect']) . "&permissions=" . $data['permissions'];
 
     }
 
@@ -174,7 +181,7 @@ class tinyDSAuth
 
     }
 
-    public function getState($time)
+    public function getState()
     {
         return $this->state;
     }
@@ -202,6 +209,75 @@ class tinyDSAuth
         } else {
             return false;
         }
+
+    }
+
+    public function refreshToken($time = null)
+    {
+
+        if (is_string($data)) {
+
+            $refresh = $data;
+            $secret = $this->secret;
+            $id = $this->id;
+            $redirect = $this->redirect;
+            $scope = $this->scope;
+
+        } else {
+
+            $refresh = $data['refresh'];
+
+            if (isset($data['secret']) == false) {$secret = $this->secret;} else {
+                $secret = $data['secret'];
+            }
+
+            if (isset($data['id']) == false) {$id = $this->id;} else {
+                $id = $data['id'];
+            }
+
+            if (isset($data['redirect']) == false) {$redirect = $this->redirect;} else {
+                $redirect = $data['redirect'];
+            }
+
+            if (isset($data['scope']) == false) {$scope = $this->scope;} else {
+                $scope = $data['scope'];
+            }
+
+        }
+
+        $info = curl_init();
+
+        curl_setopt_array($info, array(
+            CURLOPT_URL => "https://discordapp.com/api/oauth2/token",
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => array(
+                "grant_type" => "refresh_token",
+                "client_id" => $id,
+                "client_secret" => $secret,
+                "redirect_uri" => $redirect,
+                "refresh_token" => $refresh,
+                "scope" => $scope,
+            ),
+            CURLOPT_RETURNTRANSFER => true,
+        ));
+
+        $tinyresult = curl_exec($info);
+        if ($tinyresult == false) {
+            $tinyerror = curl_error($info);
+        } else {
+            $tinyerror = null;
+            $tinyresult = json_decode($tinyresult);
+        }
+
+        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+
+        curl_close($info);
+
+        return array(
+            "data" => $tinyresult,
+            "err" => $tinyerror,
+            "state" => $httpcode,
+        );
 
     }
 
