@@ -24,7 +24,7 @@ redirect: The redirect URL
 state: Protection for your OAuth2
 
 ```php 
-$tinyDiscord = new tinyDSAuth(
+$tinyDiscord = new tinyDS_OAuth(
     array(
         'id' => '',
         'scope' => array('identify'),
@@ -83,7 +83,7 @@ token: The token code
 type: The data type. You can see more info in https://discordapp.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes 
 
 ```php
-tinyDSAuth::getUser(array(
+tinyDS_OAuth::getUser(array(
     'token' => $_GET['token'], 'type' => 'users/@me', 'refresh' => $_GET['refresh']
 ));
 ```
@@ -98,7 +98,7 @@ tinyDSAuth::getUser(array(
     session_start();
 
     // The Auth System
-    $tinyDiscord = new tinyDSAuth(array(
+    $tinyDiscord = new tinyDS_OAuth(array(
         'id' => '',
         'scope' => array('identify'),
         'permissions' => 0,
@@ -115,7 +115,7 @@ tinyDSAuth::getUser(array(
 
         if ((isset($token['err']) == false) && (isset($token['data']->error) == false)) {
 
-            $tiny_user = tinyDSAuth::getUser(array(
+            $tiny_user = tinyDS_OAuth::getUser(array(
                 'token' => $token['data']->access_token, 'type' => 'users/@me'
             ));
 
@@ -150,7 +150,7 @@ tinyDSAuth::getUser(array(
     if (isset($_GET['token'])) {
 
         // Get user info
-        $tiny_user = tinyDSAuth::getUser(array(
+        $tiny_user = tinyDS_OAuth::getUser(array(
             'token' => $_GET['token'], 'type' => 'users/@me'
         ));
 
@@ -191,7 +191,7 @@ tinyDSAuth::getUser(array(
             if ((isset($token['err']) == false) && (isset($token['data']->error) == false)) {
 
                 // Get the user info
-                $tiny_user = tinyDSAuth::getUser(array(
+                $tiny_user = tinyDS_OAuth::getUser(array(
                     'token' => $token['data']->access_token, 'type' => 'users/@me'
                 ));
 
