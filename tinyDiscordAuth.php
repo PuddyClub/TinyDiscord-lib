@@ -179,24 +179,27 @@ class tinyDSAuth
 
         curl_close($info);
 
-        /*
+        if (($httpcode != 200) && (isset($data['refresh']))) {
 
-        [data] => stdClass Object
-        (
-        [code] => 0
-        [message] => 404: Not Found
-        )
+            $newtoken = $this->refreshToken($data['refresh']);
+            return $this->getUser(array(
+                'token' => $newtoken['data']->access_token, 'type' => $data['type'], 'refreshToken' => $newtoken
+            ));
 
-        [err] =>
-        [state] => 404
+        } else {
 
-         */
+            if(isset($data['refreshToken']) == false){
+                $data['refreshToken'] = '';
+            }
 
-        return array(
-            "data" => $tinyresult,
-            "err" => $tinyerror,
-            "state" => $httpcode,
-        );
+            return array(
+                "data" => $tinyresult,
+                "err" => $tinyerror,
+                "state" => $httpcode,
+                "refresh" => $data['refreshToken']
+            );
+
+        }
 
     }
 
