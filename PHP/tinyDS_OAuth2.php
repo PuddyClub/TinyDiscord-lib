@@ -86,13 +86,13 @@ class tinyDS_OAuth2
 
         }
 
-        if (is_string($data['scope']) == false) {
+        if (!is_string($data['scope'])) {
             $scope = $this->getScope($data['scope'], 0);
         } else {
             $scope = '';
         }
 
-        if (is_string($data['state']) == true) {
+        if (is_string($data['state'])) {
             $state = '&state=' . $data['state'];
         } else {
             $state = '';
