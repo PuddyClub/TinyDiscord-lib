@@ -1,7 +1,96 @@
-# TinyPHP-Discord
+# TinyPHP Discord OAuth2
 Simple Tiny PHP Library to use in your Discord oAuth2
 
-## Example Code
+More Info:
+
+https://discordapp.com/developers/docs/topics/oauth2
+
+https://discordapi.com/permissions.html
+
+## Features
+
+### Create the oAuth2 Object
+
+id: ClientID
+
+secret: The Secret ID
+
+scope: Array with the scope
+
+permissions: Permission code
+
+redirect: The redirect URL
+
+state: Protection for your oAuth2
+
+```php 
+new tinyDSAuth(
+    array(
+        'id' => '',
+        'scope' => array('identify'),
+        'permissions' => 0,
+        'redirect' => '',
+        'secret' => '',
+        'state' => ''
+    )
+); 
+```
+
+### Get oAuth2 Page URL
+
+Use this function to return your URL
+
+```php
+$tinyDiscord->getURL();
+```
+
+### Get State
+
+Use this function to return your State Value
+
+```php
+$tinyDiscord->getState();
+```
+
+### Get Token
+
+Use this function to get your token
+
+code: The code result from the OAuth2 Page
+
+```php
+$tinyDiscord->getToken($_GET['code']);
+```
+
+### Refresh Token
+
+Use this function to refresh your token
+
+refresh: The token refresh code received from getToken
+
+```php
+$token = $tinyDiscord->refreshToken($_GET['refresh']);
+```
+
+### Get User Data
+
+Use this function to call the user info using your token
+
+Inside the tinyDSAuth::getUser you can insert the value refresh to auto refresh the token if the token is expired
+
+token: The token code
+
+type: The data type. You can see more info in https://discordapp.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes 
+
+```php
+tinyDSAuth::getUser(array(
+    'token' => $_GET['token'], 'type' => 'users/@me'
+));
+```
+
+<hr>
+
+### Example Code
 
 ```php
 
@@ -15,12 +104,10 @@ Simple Tiny PHP Library to use in your Discord oAuth2
         'permissions' => 0,
         'redirect' => '',
         'secret' => '',
-        'state' => '',
+        'state' => ''
     ));
 
     // is Token? Use the token here to test
-
-    // Inside the tinyDSAuth::getUser you can insert the value refresh to auto refresh the token if the token is expired
     
     if (isset($_GET['refresh'])) {
 
