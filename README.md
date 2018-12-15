@@ -1,5 +1,5 @@
 # TinyPHP Discord OAuth2
-Simple Tiny PHP Library to use in your Discord oAuth2
+Simple Tiny PHP Library to use in your Discord OAuth2
 
 More Info:
 
@@ -9,7 +9,7 @@ https://discordapi.com/permissions.html
 
 ## Features
 
-### Create the oAuth2 Object
+### Create the OAuth2 Object
 
 id: ClientID
 
@@ -21,7 +21,7 @@ permissions: Permission code
 
 redirect: The redirect URL
 
-state: Protection for your oAuth2
+state: Protection for your OAuth2
 
 ```php 
 $tinyDiscord = new tinyDSAuth(
@@ -36,7 +36,7 @@ $tinyDiscord = new tinyDSAuth(
 ); 
 ```
 
-### Get oAuth2 Page URL
+### Get OAuth2 Page URL
 
 Use this function to return your URL
 
@@ -172,7 +172,7 @@ tinyDSAuth::getUser(array(
 
     } else
 
-    // is code from the oAuth2? Use the code here
+    // is code from the OAuth2? Use the code here
     if (isset($_GET['code'])) {
 
         // Protection
@@ -227,7 +227,7 @@ tinyDSAuth::getUser(array(
 
     } else {
 
-        // Send the user into the Discord oAuth2
+        // Send the user into the Discord OAuth2
         $_SESSION['oauth2state'] = $tinyDiscord->getState();
         header('Location: ' . $tinyDiscord->getURL());
 
