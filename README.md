@@ -19,20 +19,65 @@ Simple Tiny PHP Library to use in your Discord oAuth2
     ));
 
     // is Token? Use the token here to test
+
+    // Inside the tinyDSAuth::getUser you can insert the value refresh to auto refresh the token if the token is expired
+    
+    if (isset($_GET['refresh'])) {
+
+        $token = $tinyDiscord->refreshToken($_GET['refresh']);
+
+        if ((isset($token['err']) == false) && (isset($token['data']->error) == false)) {
+
+            $tiny_user = tinyDSAuth::getUser(array(
+                'token' => $token['data']->access_token, 'type' => 'users/@me'
+            ));
+
+            if ((isset($tiny_user['err']) == false) && (isset($tiny_user['data']->error) == false)) {
+
+                // Show some token details
+                echo '<h2>Token details:</h2>';
+                echo 'Token: ' . $token['data']->access_token . "<br/>";
+                echo 'Refresh token: ' . $token['data']->refresh_token . "<br/>";
+                echo 'Token Type: ' . $token['data']->token_type . "<br/>";
+
+                echo 'Expires: ' . date("m/d/Y h:i:s A T", $tinyDiscord->getExpiration()) . " - ";
+                echo ($tinyDiscord->hasExpired() ? 'expired' : 'not expired') . "<br/>";
+
+                echo '<h2>Resource owner details:</h2>';
+                printf('Hello %s#%s!<br/><br/>', $tiny_user['data']['username'], $tiny_user['data']['discriminator']);
+
+            }
+
+        }
+
+        echo '<pre>';
+        print_r($tiny_user);
+        echo '</pre>';
+
+        echo '<pre>';
+        print_r($token);
+        echo '</pre>';
+
+    } else
+
     if (isset($_GET['token'])) {
 
         // Get user info
         $tiny_user = tinyDSAuth::getUser(array(
-            'token' => $_GET['token'], 'type' => 'users/@me', 'refresh' => $_GET['refresh_token'],
+            'token' => $_GET['token'], 'type' => 'users/@me'
         ));
 
-        // Show some token details
-        echo '<h2>Token details:</h2>';
-        echo 'Token: ' . $_GET['token'] . "<br/>";
-        echo 'Refresh token: ' . $_GET['refresh_token'] . "<br/>";
+        if ((isset($tiny_user['err']) == false) && (isset($tiny_user['data']->error) == false)) {
 
-        echo '<h2>Resource owner details:</h2>';
-        printf('Hello %s#%s!<br/><br/>', $tiny_user['data']['username'], $tiny_user['data']['discriminator']);
+            // Show some token details
+            echo '<h2>Token details:</h2>';
+            echo 'Token: ' . $_GET['token'] . "<br/>";
+            echo 'Refresh token: ' . $_GET['refresh_token'] . "<br/>";
+
+            echo '<h2>Resource owner details:</h2>';
+            printf('Hello %s#%s!<br/><br/>', $tiny_user['data']['username'], $tiny_user['data']['discriminator']);
+
+        }
 
         echo '<pre>';
         print_r($tiny_user);
@@ -60,10 +105,10 @@ Simple Tiny PHP Library to use in your Discord oAuth2
 
                 // Get the user info
                 $tiny_user = tinyDSAuth::getUser(array(
-                    'token' => $token['data']->access_token, 'type' => 'users/@me', 'refresh' => $token['data']->refresh_token,
+                    'token' => $token['data']->access_token, 'type' => 'users/@me'
                 ));
 
-                if ((isset($ds_user['err']) == false) && (isset($ds_user['data']->error) == false)) {
+                if ((isset($tiny_user['err']) == false) && (isset($tiny_user['data']->error) == false)) {
 
                     // Show some token details
                     echo '<h2>Token details:</h2>';
@@ -77,25 +122,19 @@ Simple Tiny PHP Library to use in your Discord oAuth2
                     echo '<h2>Resource owner details:</h2>';
                     printf('Hello %s#%s!<br/><br/>', $tiny_user['data']['username'], $tiny_user['data']['discriminator']);
 
-                    echo '<pre>';
-                    print_r($tiny_user);
-                    echo '</pre>';
 
-                    echo '<pre>';
-                    print_r($token);
-                    echo '</pre>';
-
-                } else {
-
-                    echo 'ERROR GET DATA!';
 
                 }
 
-            } else {
-
-                echo 'ERROR GET TOKEN!';
-
             }
+
+            echo '<pre>';
+            print_r($tiny_user);
+            echo '</pre>';
+
+            echo '<pre>';
+            print_r($token);
+            echo '</pre>';
 
         }
 

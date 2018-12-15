@@ -25,14 +25,20 @@ class tinyDSAuth
     protected $state;
     protected $expire;
 
-    public function getScope($data = null)
+    public function getScope($data = null, $type = 0)
     {
 
         $scopeFinal = '';
         for ($i = 0; $i < count($data); $i++) {
 
             if ($i > 0) {
-                $scopeFinal = $scopeFinal . '%20' . $data[$i];
+
+                if ($type == 0) {
+                    $scopeFinal = $scopeFinal . '%20' . $data[$i];
+                } else if ($type == 1) {
+                    $scopeFinal = $scopeFinal . ' ' . $data[$i];
+                }
+
             } else {
                 $scopeFinal = $data[$i];
             }
@@ -69,7 +75,7 @@ class tinyDSAuth
         }
 
         if (is_string($data['scope']) == false) {
-            $scope = $this->getScope($data['scope']);
+            $scope = $this->getScope($data['scope'], 0);
         } else {
             $scope = '';
         }
@@ -173,6 +179,19 @@ class tinyDSAuth
 
         curl_close($info);
 
+        /*
+
+        [data] => stdClass Object
+        (
+        [code] => 0
+        [message] => 404: Not Found
+        )
+
+        [err] =>
+        [state] => 404
+
+         */
+
         return array(
             "data" => $tinyresult,
             "err" => $tinyerror,
@@ -212,7 +231,7 @@ class tinyDSAuth
 
     }
 
-    public function refreshToken($time = null)
+    public function refreshToken($data = null)
     {
 
         if (is_string($data)) {
@@ -221,7 +240,7 @@ class tinyDSAuth
             $secret = $this->secret;
             $id = $this->id;
             $redirect = $this->redirect;
-            $scope = $this->scope;
+            $scope = $this->getScope($this->scope, 1);
 
         } else {
 
@@ -239,8 +258,8 @@ class tinyDSAuth
                 $redirect = $data['redirect'];
             }
 
-            if (isset($data['scope']) == false) {$scope = $this->scope;} else {
-                $scope = $data['scope'];
+            if (isset($data['scope']) == false) {$scope = $this->getScope($this->scope, 1);} else {
+                $scope = $this->getScope($data['scope'], 1);
             }
 
         }
