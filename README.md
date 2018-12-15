@@ -24,7 +24,7 @@ redirect: The redirect URL
 state: Protection for your oAuth2
 
 ```php 
-new tinyDSAuth(
+$tinyDiscord = new tinyDSAuth(
     array(
         'id' => '',
         'scope' => array('identify'),
