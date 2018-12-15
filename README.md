@@ -76,7 +76,7 @@ $token = $tinyDiscord->refreshToken($_GET['refresh']);
 
 Use this function to call the user info using your token
 
-Inside the tinyDSAuth::getUser you can insert the value refresh to auto refresh the token if the token is expired
+refresh: You can insert the value refresh to auto refresh the token if the token is expired
 
 token: The token code
 
