@@ -14,7 +14,7 @@
 // https://discordapp.com/developers/docs/topics/oauth2
 // https://discordapi.com/permissions.html
 
-class tinyDS_OAuth
+class tinyDS_OAuth2
 {
 
     protected $id;
