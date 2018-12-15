@@ -1,5 +1,5 @@
 # TinyPHP-Discord
-Tiny PHP Library to use the Discord oAuth2
+Simple Tiny PHP Library to use in your Discord oAuth2
 
 ## Example Code
 
@@ -8,6 +8,7 @@ Tiny PHP Library to use the Discord oAuth2
 
     session_start();
 
+    // The Auth System
     $tinyDiscord = new tinyDSAuth(array(
         'id' => '',
         'scope' => array('identify'),
@@ -17,8 +18,10 @@ Tiny PHP Library to use the Discord oAuth2
         'state' => '',
     ));
 
+    // is Token? Use the token here to test
     if (isset($_GET['token'])) {
 
+        // Get user info
         $tiny_user = tinyDSAuth::getUser(array(
             'token' => $_GET['token'], 'type' => 'users/@me', 'refresh' => $_GET['refresh_token'],
         ));
@@ -37,8 +40,10 @@ Tiny PHP Library to use the Discord oAuth2
 
     } else
 
+    // is code from the oAuth2? Use the code here
     if (isset($_GET['code'])) {
 
+        // Protection
         if (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
 
             unset($_SESSION['oauth2state']);
@@ -48,10 +53,12 @@ Tiny PHP Library to use the Discord oAuth2
 
         } else {
 
+            // Get the user token
             $token = $tinyDiscord->getToken($_GET['code']);
 
             if ((isset($token['err']) == false) && (isset($token['data']->error) == false)) {
 
+                // Get the user info
                 $tiny_user = tinyDSAuth::getUser(array(
                     'token' => $token['data']->access_token, 'type' => 'users/@me', 'refresh' => $token['data']->refresh_token,
                 ));
@@ -94,6 +101,7 @@ Tiny PHP Library to use the Discord oAuth2
 
     } else {
 
+        // Send the user into the Discord oAuth2
         $_SESSION['oauth2state'] = $tinyDiscord->getState();
         header('Location: ' . $tinyDiscord->getURL());
 
