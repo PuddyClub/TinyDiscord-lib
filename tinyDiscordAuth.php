@@ -191,7 +191,7 @@ class tinyDS_OAuth2
 
         curl_close($info);
 
-        if (($httpcode != 200) && (isset($data['refresh']))) {
+        if (($httpcode != 200) && (isset($data['refresh'])) && (empty($data['refresh']) == false)) {
 
             $newtoken = $this->refreshToken($data['refresh']);
             return $this->getUser(array(

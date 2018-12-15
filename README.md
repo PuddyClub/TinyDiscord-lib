@@ -150,8 +150,8 @@ tinyDS_OAuth2::getUser(array(
     if (isset($_GET['token'])) {
 
         // Get user info
-        $tiny_user = tinyDS_OAuth2::getUser(array(
-            'token' => $_GET['token'], 'type' => 'users/@me'
+                $tiny_user = tinyDS_OAuth2::getUser(array(
+            'token' => $_GET['token'], 'type' => 'users/@me', 'refresh' => $_GET['refresh_token']
         ));
 
         if ((isset($tiny_user['err']) == false) && (isset($tiny_user['data']->error) == false)) {
