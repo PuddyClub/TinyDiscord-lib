@@ -84,7 +84,7 @@ type: The data type. You can see more info in https://discordapp.com/developers/
 
 ```php
 tinyDSAuth::getUser(array(
-    'token' => $_GET['token'], 'type' => 'users/@me'
+    'token' => $_GET['token'], 'type' => 'users/@me', 'refresh' => $_GET['refresh']
 ));
 ```
 
