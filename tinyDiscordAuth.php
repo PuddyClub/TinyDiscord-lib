@@ -52,12 +52,24 @@ class tinyDSAuth
     public function __construct($data)
     {
 
-        $this->id = $data['id'];
-        $this->scope = $data['scope'];
-        $this->permissions = $data['permissions'];
-        $this->redirect = $data['redirect'];
-        $this->secret = $data['secret'];
-        $this->state = $data['state'];
+        if (isset($data['id']) == true) {
+            $this->id = $data['id'];
+        }
+        if (isset($data['scope']) == true) {
+            $this->scope = $data['scope'];
+        }
+        if (isset($data['permissions']) == true) {
+            $this->permissions = $data['permissions'];
+        }
+        if (isset($data['redirect']) == true) {
+            $this->redirect = $data['redirect'];
+        }
+        if (isset($data['secret']) == true) {
+            $this->secret = $data['secret'];
+        }
+        if (isset($data['state']) == true) {
+            $this->state = $data['state'];
+        }
 
     }
 
@@ -150,7 +162,7 @@ class tinyDSAuth
         return array(
             "data" => $tinyresult,
             "err" => $tinyerror,
-            "state" => $httpcode,
+            "state" => $httpcode
         );
 
     }
@@ -162,7 +174,7 @@ class tinyDSAuth
         curl_setopt_array($info, array(
             CURLOPT_URL => "https://discordapp.com/api/" . $data['type'],
             CURLOPT_HTTPHEADER => array(
-                "Authorization: Bearer " . $data['token'],
+                "Authorization: Bearer " . $data['token']
             ),
             CURLOPT_RETURNTRANSFER => true,
         ));
@@ -188,7 +200,7 @@ class tinyDSAuth
 
         } else {
 
-            if(isset($data['refreshToken']) == false){
+            if (isset($data['refreshToken']) == false) {
                 $data['refreshToken'] = '';
             }
 
@@ -278,7 +290,7 @@ class tinyDSAuth
                 "client_secret" => $secret,
                 "redirect_uri" => $redirect,
                 "refresh_token" => $refresh,
-                "scope" => $scope,
+                "scope" => $scope
             ),
             CURLOPT_RETURNTRANSFER => true,
         ));
@@ -298,7 +310,7 @@ class tinyDSAuth
         return array(
             "data" => $tinyresult,
             "err" => $tinyerror,
-            "state" => $httpcode,
+            "state" => $httpcode
         );
 
     }
