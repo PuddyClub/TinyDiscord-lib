@@ -52,22 +52,22 @@ class tinyDS_OAuth2
     public function __construct($data)
     {
 
-        if (isset($data['id']) == true) {
+        if (isset($data['id'])) {
             $this->id = $data['id'];
         }
-        if (isset($data['scope']) == true) {
+        if (isset($data['scope'])) {
             $this->scope = $data['scope'];
         }
-        if (isset($data['permissions']) == true) {
+        if (isset($data['permissions'])) {
             $this->permissions = $data['permissions'];
         }
-        if (isset($data['redirect']) == true) {
+        if (isset($data['redirect'])) {
             $this->redirect = $data['redirect'];
         }
-        if (isset($data['secret']) == true) {
+        if (isset($data['secret'])) {
             $this->secret = $data['secret'];
         }
-        if (isset($data['state']) == true) {
+        if (isset($data['state'])) {
             $this->state = $data['state'];
         }
 
@@ -76,7 +76,7 @@ class tinyDS_OAuth2
     public function getURL($data = null)
     {
 
-        if (isset($data) == false) {
+        if (!isset($data)) {
 
             $data['scope'] = $this->scope;
             $data['state'] = $this->state;
@@ -116,15 +116,15 @@ class tinyDS_OAuth2
 
             $code = $data['code'];
 
-            if (isset($data['secret']) == false) {$secret = $this->secret;} else {
+            if (!isset($data['secret'])) {$secret = $this->secret;} else {
                 $secret = $data['secret'];
             }
 
-            if (isset($data['id']) == false) {$id = $this->id;} else {
+            if (!isset($data['id'])) {$id = $this->id;} else {
                 $id = $data['id'];
             }
 
-            if (isset($data['redirect']) == false) {$redirect = $this->redirect;} else {
+            if (!isset($data['redirect'])) {$redirect = $this->redirect;} else {
                 $redirect = $data['redirect'];
             }
 
@@ -191,7 +191,7 @@ class tinyDS_OAuth2
 
         curl_close($info);
 
-        if (($httpcode != 200) && (isset($data['refresh'])) && (empty($data['refresh']) == false)) {
+        if (($httpcode != 200) && (isset($data['refresh'])) && (!empty($data['refresh']))) {
 
             $newtoken = $this->refreshToken($data['refresh']);
             return $this->getUser(array(
@@ -200,7 +200,7 @@ class tinyDS_OAuth2
 
         } else {
 
-            if (isset($data['refreshToken']) == false) {
+            if (!isset($data['refreshToken'])) {
                 $data['refreshToken'] = '';
             }
 
@@ -223,7 +223,7 @@ class tinyDS_OAuth2
     public function getExpiration($time = null)
     {
 
-        if (isset($time) == false) {
+        if (!isset($time)) {
             $time = $this->expire;
         }
 
@@ -234,7 +234,7 @@ class tinyDS_OAuth2
     public function hasExpired($time = null)
     {
 
-        if (isset($time) == false) {
+        if (!isset($time)) {
             $time = $this->getExpiration();
         }
 
@@ -261,19 +261,19 @@ class tinyDS_OAuth2
 
             $refresh = $data['refresh'];
 
-            if (isset($data['secret']) == false) {$secret = $this->secret;} else {
+            if (!isset($data['secret'])) {$secret = $this->secret;} else {
                 $secret = $data['secret'];
             }
 
-            if (isset($data['id']) == false) {$id = $this->id;} else {
+            if (!isset($data['id'])) {$id = $this->id;} else {
                 $id = $data['id'];
             }
 
-            if (isset($data['redirect']) == false) {$redirect = $this->redirect;} else {
+            if (!isset($data['redirect'])) {$redirect = $this->redirect;} else {
                 $redirect = $data['redirect'];
             }
 
-            if (isset($data['scope']) == false) {$scope = $this->getScope($this->scope, 1);} else {
+            if (!isset($data['scope'])) {$scope = $this->getScope($this->scope, 1);} else {
                 $scope = $this->getScope($data['scope'], 1);
             }
 
