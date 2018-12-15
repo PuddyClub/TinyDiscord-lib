@@ -131,13 +131,13 @@ tinyDS_OAuth2::getUser(array(
 
         $token = $tinyDiscord->refreshToken($_GET['refresh']);
 
-        if ((isset($token['err']) == false) && (isset($token['data']->error) == false)) {
+        if ((!isset($token['err'])) && (!isset($token['data']->error))) {
 
             $tiny_user = tinyDS_OAuth2::getUser(array(
                 'token' => $token['data']->access_token, 'type' => 'users/@me'
             ));
 
-            if ((isset($tiny_user['err']) == false) && (isset($tiny_user['data']->error) == false)) {
+            if ((!isset($tiny_user['err'])) && (!isset($tiny_user['data']->error))) {
 
                 // Show some token details
                 echo '<h2>Token details:</h2>';
@@ -172,7 +172,7 @@ tinyDS_OAuth2::getUser(array(
             'token' => $_GET['token'], 'type' => 'users/@me', 'refresh' => $_GET['refresh_token']
         ));
 
-        if ((isset($tiny_user['err']) == false) && (isset($tiny_user['data']->error) == false)) {
+        if ((!isset($tiny_user['err'])) && (!isset($tiny_user['data']->error))) {
 
             // Show some token details
             echo '<h2>Token details:</h2>';
@@ -206,14 +206,14 @@ tinyDS_OAuth2::getUser(array(
             // Get the user token
             $token = $tinyDiscord->getToken($_GET['code']);
 
-            if ((isset($token['err']) == false) && (isset($token['data']->error) == false)) {
+            if ((!isset($token['err'])) && (!isset($token['data']->error))) {
 
                 // Get the user info
                 $tiny_user = tinyDS_OAuth2::getUser(array(
                     'token' => $token['data']->access_token, 'type' => 'users/@me'
                 ));
 
-                if ((isset($tiny_user['err']) == false) && (isset($tiny_user['data']->error) == false)) {
+                if ((!isset($tiny_user['err'])) && (!isset($tiny_user['data']->error))) {
 
                     // Show some token details
                     echo '<h2>Token details:</h2>';
