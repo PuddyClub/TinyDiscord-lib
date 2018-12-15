@@ -76,7 +76,7 @@ $token = $tinyDiscord->refreshToken($_GET['refresh']);
 
 Use this function to revoke your token. The value returned is the HTTP Code
 
-revoke: The token refresh code received from getToken
+revoke: The token code received from getToken
 
 ```php
 $revoke = tinyDS_OAuth2::revokeToken($_GET['revoke']);
