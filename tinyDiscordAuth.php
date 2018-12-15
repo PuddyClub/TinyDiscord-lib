@@ -5,7 +5,7 @@
  *  TinyPHP-Discord
  *  Author: Jasmin Dreasond
  *  Copyright: © 2018 Jasmin Dreasond
- *  
+ *
  *  Github: https://github.com/JasminDreasond
  *  License: MIT
  *
@@ -23,6 +23,7 @@ class tinyDSAuth
     protected $redirect;
     protected $secret;
     protected $state;
+    protected $expire;
 
     public function __construct($data)
     {
@@ -131,6 +132,8 @@ class tinyDSAuth
 
         curl_close($info);
 
+        $this->expire = (int) $tinyresult->expires_in;
+
         return array(
             "data" => $tinyresult,
             "err" => $tinyerror,
@@ -176,13 +179,23 @@ class tinyDSAuth
         return $this->state;
     }
 
-    public function getExpiration($time)
+    public function getExpiration($time = null)
     {
+
+        if (isset($time) == false) {
+            $time = $this->expire;
+        }
+
         return strtotime("now") + $time;
+
     }
 
-    public function hasExpired($time)
+    public function hasExpired($time = null)
     {
+
+        if (isset($time) == false) {
+            $time = $this->getExpiration();
+        }
 
         if (strtotime("now") > $time) {
             return true;
@@ -193,5 +206,3 @@ class tinyDSAuth
     }
 
 };
-
-?>

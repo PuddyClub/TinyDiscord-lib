@@ -64,8 +64,8 @@ Tiny PHP Library to use the Discord oAuth2
                     echo 'Refresh token: ' . $token['data']->refresh_token . "<br/>";
                     echo 'Token Type: ' . $token['data']->token_type . "<br/>";
 
-                    echo 'Expires: ' . date("m/d/Y h:i:s A T", tinyDSAuth::getExpiration($token['data']->expires_in)) . " - ";
-                    echo (tinyDSAuth::hasExpired(tinyDSAuth::getExpiration($token['data']->expires_in)) ? 'expired' : 'not expired') . "<br/>";
+                    echo 'Expires: ' . date("m/d/Y h:i:s A T", $tinyDiscord->getExpiration()) . " - ";
+                    echo ($tinyDiscord->hasExpired() ? 'expired' : 'not expired') . "<br/>";
 
                     echo '<h2>Resource owner details:</h2>';
                     printf('Hello %s#%s!<br/><br/>', $tiny_user['data']['username'], $tiny_user['data']['discriminator']);
