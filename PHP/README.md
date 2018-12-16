@@ -86,9 +86,11 @@ $revoke = tinyDS_OAuth2::revokeToken($_GET['revoke']);
 
 Use this function to call the user info using your token
 
-refresh: You can insert the value refresh to auto refresh the token if the token is expired
-
 token: The token code
+
+refresh: You can insert the value refresh to auto refresh the token if the token is expired (Optional)
+
+timeout: Timeout to get the user data (Optional)
 
 type: The data type. You can see more info in https://discordapp.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes 
 
@@ -123,6 +125,46 @@ tinyDS_OAuth2::getUser(array(
 
         echo '<pre>';
         print_r(tinyDS_OAuth2::revokeToken($_GET['revoke']));
+        echo '</pre>';
+
+    } else
+
+    if (isset($mybb->input['guilds'])) {
+
+        // Guild List
+        if (isset($mybb->input['guilds'])) {
+            $thetk = $mybb->input['guilds'];
+            $thetk_title = 'Guild';
+        }
+
+        $tiny_data = tinyDS_OAuth2::getUser(array(
+            'token' => $thetk, 'type' => 'users/@me/guilds', 'refresh' => $mybb->input['refresh_token'],
+        ));
+
+        $tiny_user = tinyDS_OAuth2::getUser(array(
+            'token' => $thetk, 'type' => 'users/@me', 'refresh' => $mybb->input['refresh_token'],
+        ));
+
+        echo '<h2>Token details:</h2>';
+        if ((!isset($tiny_user['err'])) && (!isset($tiny_user['data']->error))) {
+
+            // Show some token details
+            echo 'Token: ' . $thetk . "<br/>";
+            echo 'Refresh token: ' . $mybb->input['refresh_token'] . "<br/>";
+
+            echo '<h2>Resource owner details:</h2>';
+            printf('Hello %s#%s!<br/><br/>', $tiny_user['data']['username'], $tiny_user['data']['discriminator']);
+
+        }
+
+        echo '<pre>';
+        print_r($tiny_user);
+        echo '</pre>';
+
+        echo '<h2>' . $thetk_title . ' details:</h2>';
+
+        echo '<pre>';
+        print_r($tiny_data);
         echo '</pre>';
 
     } else

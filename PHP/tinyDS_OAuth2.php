@@ -170,6 +170,10 @@ class tinyDS_OAuth2
     public function getUser($data)
     {
 
+        if (!isset($data['timeout'])) {
+            $data['timeout'] = 1;
+        }
+
         $info = curl_init();
         curl_setopt_array($info, array(
             CURLOPT_URL => "https://discordapp.com/api/" . $data['type'],
@@ -177,6 +181,7 @@ class tinyDS_OAuth2
                 "Authorization: Bearer " . $data['token'],
             ),
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => $data['timeout'],
         ));
 
         $tinyresult = curl_exec($info);
