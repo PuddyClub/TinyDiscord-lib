@@ -136,9 +136,12 @@ tinyDS_OAuth2::getUser(array(
             $thetk = $_GET['guilds'];
             $thetk_title = 'Guild';
             $thetk_type = 'users/@me/guilds';
-        } else if (isset($_GET['connections'])) {
+        } 
+        
+        // Connection List
+        else if (isset($_GET['connections'])) {
             $thetk = $_GET['connections'];
-            $thetk_title = 'Connections';
+            $thetk_title = 'Connection';
             $thetk_type = 'users/@me/connections';
         }
 

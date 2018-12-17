@@ -220,6 +220,101 @@ class tinyDS_OAuth2
 
     }
 
+    public function addGuildMember($data)
+    {
+
+        $postfield = array(
+            "access_token" => $data['token'],
+        );
+
+        if (isset($data['nick'])) {
+            $postfield['nick'] = $data['nick'];
+        }
+        if (isset($data['roles'])) {
+            $postfield['roles'] = $data['roles'];
+        }
+        if (isset($data['mute'])) {
+            $postfield['mute'] = $data['mute'];
+        }
+        if (isset($data['deaf'])) {
+            $postfield['deaf'] = $data['deaf'];
+        }
+
+        $revoke = $data;
+        $info = curl_init();
+
+        curl_setopt_array($info, array(
+            CURLOPT_URL => "https://discordapp.com/guilds/" . $data['guildID'] . "/members/" . $data['userID'],
+            CURLOPT_CUSTOMREQUEST => "PUT",
+            CURLOPT_POSTFIELDS => $postfield,
+            CURLOPT_RETURNTRANSFER => true,
+        ));
+
+        $tinyresult = curl_exec($info);
+        if ($tinyresult == false) {
+            $tinyerror = curl_error($info);
+        } else {
+            $tinyerror = null;
+            $tinyresult = json_decode($tinyresult, true);
+        }
+
+        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+
+        curl_close($info);
+
+        return array(
+            "data" => $tinyresult,
+            "err" => $tinyerror,
+            "state" => $httpcode,
+            "refresh" => $data['refreshToken'],
+        );
+
+    }
+
+    public function addtoGroupDM($token, $channelID, $userID, $nick = null)
+    {
+
+        if (!isset($nick)) {
+            $postfield = array(
+                "access_token" => $token,
+            );
+        } else {
+            $postfield = array(
+                "access_token" => $token,
+                "nick" => $nick,
+            );
+        }
+
+        $info = curl_init();
+
+        curl_setopt_array($info, array(
+            CURLOPT_URL => "https://discordapp.com/channels/" . $channelID . "/recipients/" . $userID,
+            CURLOPT_CUSTOMREQUEST => "PUT",
+            CURLOPT_POSTFIELDS => $postfield,
+            CURLOPT_RETURNTRANSFER => true,
+        ));
+
+        $tinyresult = curl_exec($info);
+        if ($tinyresult == false) {
+            $tinyerror = curl_error($info);
+        } else {
+            $tinyerror = null;
+            $tinyresult = json_decode($tinyresult, true);
+        }
+
+        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+
+        curl_close($info);
+
+        return array(
+            "data" => $tinyresult,
+            "err" => $tinyerror,
+            "state" => $httpcode,
+            "refresh" => $data['refreshToken'],
+        );
+
+    }
+
     public function getState()
     {
         return $this->state;
