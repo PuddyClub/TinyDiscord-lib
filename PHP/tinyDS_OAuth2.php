@@ -250,24 +250,12 @@ class tinyDS_OAuth2
             CURLOPT_RETURNTRANSFER => true,
         ));
 
-        $tinyresult = curl_exec($info);
-        if ($tinyresult == false) {
-            $tinyerror = curl_error($info);
-        } else {
-            $tinyerror = null;
-            $tinyresult = json_decode($tinyresult, true);
-        }
-
+        curl_exec($info);
         $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
 
         curl_close($info);
 
-        return array(
-            "data" => $tinyresult,
-            "err" => $tinyerror,
-            "state" => $httpcode,
-            "refresh" => $data['refreshToken'],
-        );
+        return $httpcode;
 
     }
 
@@ -294,24 +282,12 @@ class tinyDS_OAuth2
             CURLOPT_RETURNTRANSFER => true,
         ));
 
-        $tinyresult = curl_exec($info);
-        if ($tinyresult == false) {
-            $tinyerror = curl_error($info);
-        } else {
-            $tinyerror = null;
-            $tinyresult = json_decode($tinyresult, true);
-        }
-
+        curl_exec($info);
         $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
 
         curl_close($info);
 
-        return array(
-            "data" => $tinyresult,
-            "err" => $tinyerror,
-            "state" => $httpcode,
-            "refresh" => $data['refreshToken'],
-        );
+        return $httpcode;
 
     }
 
