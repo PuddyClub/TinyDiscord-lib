@@ -129,20 +129,25 @@ tinyDS_OAuth2::getUser(array(
 
     } else
 
-    if (isset($mybb->input['guilds'])) {
+    if ((isset($_GET['guilds'])) || (isset($_GET['connections']))) {
 
         // Guild List
-        if (isset($mybb->input['guilds'])) {
-            $thetk = $mybb->input['guilds'];
+        if (isset($_GET['guilds'])) {
+            $thetk = $_GET['guilds'];
             $thetk_title = 'Guild';
+            $thetk_type = 'users/@me/guilds';
+        } else if (isset($_GET['connections'])) {
+            $thetk = $_GET['connections'];
+            $thetk_title = 'Connections';
+            $thetk_type = 'users/@me/connections';
         }
 
         $tiny_data = tinyDS_OAuth2::getUser(array(
-            'token' => $thetk, 'type' => 'users/@me/guilds', 'refresh' => $mybb->input['refresh_token'],
+            'token' => $thetk, 'type' => $thetk_type, 'refresh' => $_GET['refresh_token'],
         ));
 
         $tiny_user = tinyDS_OAuth2::getUser(array(
-            'token' => $thetk, 'type' => 'users/@me', 'refresh' => $mybb->input['refresh_token'],
+            'token' => $thetk, 'type' => 'users/@me', 'refresh' => $_GET['refresh_token'],
         ));
 
         echo '<h2>Token details:</h2>';
@@ -150,7 +155,7 @@ tinyDS_OAuth2::getUser(array(
 
             // Show some token details
             echo 'Token: ' . $thetk . "<br/>";
-            echo 'Refresh token: ' . $mybb->input['refresh_token'] . "<br/>";
+            echo 'Refresh token: ' . $_GET['refresh_token'] . "<br/>";
 
             echo '<h2>Resource owner details:</h2>';
             printf('Hello %s#%s!<br/><br/>', $tiny_user['data']['username'], $tiny_user['data']['discriminator']);
