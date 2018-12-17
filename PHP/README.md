@@ -127,8 +127,43 @@ tinyDS_OAuth2::getUser(array(
         print_r(tinyDS_OAuth2::revokeToken($_GET['revoke']));
         echo '</pre>';
 
+    } else 
+    
+    // Add to Group DM
+    if (isset($mybb->input['addtoGroupDM'])) {
+
+        echo '<pre>';
+        print_r(tinyDS_OAuth2::addtoGroupDM(
+            $mybb->input['addtoGroupDM'],
+            $mybb->input['channelID'],
+            $mybb->input['userID']
+        ));
+        echo '</pre>';
+
+    } else 
+    
+    // Add Guild Member
+    if (isset($mybb->input['addGuildMember'])) {
+
+        echo '<pre>';
+        print_r(tinyDS_OAuth2::addGuildMember(array(
+
+            'token' => $mybb->input['addGuildMember'],
+
+            'nick' => $mybb->input['nick'],
+            'roles' => $mybb->input['roles'],
+            'mute' => $mybb->input['mute'],
+            'deaf' => $mybb->input['deaf'],
+
+            'guildID' => $mybb->input['guildID'],
+            'userID' => $mybb->input['userID'],
+
+        )));
+        echo '</pre>';
+
     } else
 
+    // Others
     if ((isset($_GET['guilds'])) || (isset($_GET['connections']))) {
 
         // Guild List
