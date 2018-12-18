@@ -82,6 +82,61 @@ revoke: The token code received from getToken
 $revoke = tinyDS_OAuth2::revokeToken($_GET['revoke']);
 ```
 
+### Add to Group DM
+
+Use this function to add users into a DM. The value returned is the HTTP Code
+
+addtoGroupDM: The token code received from getToken
+
+channelID: The channel ID
+
+userID: The user ID
+
+nick: User Nickname (Optional)
+
+```php
+$addtoGroupDM = tinyDS_OAuth2::addtoGroupDM(
+            $_GET['addtoGroupDM'],
+            $_GET['channelID'],
+            $_GET['userID'],
+            $_GET['nick']
+);
+```
+
+### Add Guild Member
+
+Use this function to add users into a Guild. The value returned is the HTTP Code
+
+revoke: The token code received from getToken
+
+nick: User Nickname (Optional)
+
+roles: User Role IDs (Optional)
+
+mute: The user is muted or not
+
+deaf: The user is deaf or not
+
+guildID: The Guild ID
+
+userID: The user ID
+
+```php
+$addGuildMember = tinyDS_OAuth2::addGuildMember(array(
+
+            'token' => $_GET['addGuildMember'],
+
+            'nick' => $_GET['nick'],
+            'roles' => $_GET['roles'],
+            'mute' => $_GET['mute'],
+            'deaf' => $_GET['deaf'],
+
+            'guildID' => $_GET['guildID'],
+            'userID' => $_GET['userID'],
+
+));
+```
+
 ### Get User Data
 
 Use this function to call the user info using your token
@@ -130,33 +185,33 @@ tinyDS_OAuth2::getUser(array(
     } else 
     
     // Add to Group DM
-    if (isset($mybb->input['addtoGroupDM'])) {
+    if (isset($_GET['addtoGroupDM'])) {
 
         echo '<pre>';
         print_r(tinyDS_OAuth2::addtoGroupDM(
-            $mybb->input['addtoGroupDM'],
-            $mybb->input['channelID'],
-            $mybb->input['userID']
+            $_GET['addtoGroupDM'],
+            $_GET['channelID'],
+            $_GET['userID']
         ));
         echo '</pre>';
 
     } else 
     
     // Add Guild Member
-    if (isset($mybb->input['addGuildMember'])) {
+    if (isset($_GET['addGuildMember'])) {
 
         echo '<pre>';
         print_r(tinyDS_OAuth2::addGuildMember(array(
 
-            'token' => $mybb->input['addGuildMember'],
+            'token' => $_GET['addGuildMember'],
 
-            'nick' => $mybb->input['nick'],
-            'roles' => $mybb->input['roles'],
-            'mute' => $mybb->input['mute'],
-            'deaf' => $mybb->input['deaf'],
+            'nick' => $_GET['nick'],
+            'roles' => $_GET['roles'],
+            'mute' => $_GET['mute'],
+            'deaf' => $_GET['deaf'],
 
-            'guildID' => $mybb->input['guildID'],
-            'userID' => $mybb->input['userID'],
+            'guildID' => $_GET['guildID'],
+            'userID' => $_GET['userID'],
 
         )));
         echo '</pre>';
