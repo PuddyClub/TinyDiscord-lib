@@ -230,14 +230,47 @@ class tinyDS_OAuth2
         if (isset($data['nick'])) {
             $postfield['nick'] = $data['nick'];
         }
+
         if (isset($data['roles'])) {
-            $postfield['roles'] = $data['roles'];
+
+            if ((!is_array($data['roles'])) && (is_string($data['roles']))) {
+                $postfield['roles'] = $data['roles'] = explode(",", preg_replace('/\s+/', '', $data['roles']));
+            } else {
+                $postfield['roles'] = $data['roles'];
+            }
+
         }
+
         if (isset($data['mute'])) {
-            $postfield['mute'] = $data['mute'];
+
+            if ((!is_bool($data['mute'])) && (is_string($data['mute']))) {
+
+                if (($data['mute'] == "on") || ($data['mute'] == "1") || ($data['mute'] == "true")) {
+                    $postfield['mute'] = true;
+                } else {
+                    $postfield['mute'] = false;
+                }
+
+            } else {
+                $postfield['mute'] = $data['mute'];
+            }
+
         }
+
         if (isset($data['deaf'])) {
-            $postfield['deaf'] = $data['deaf'];
+
+            if ((!is_bool($data['deaf'])) && (is_string($data['deaf']))) {
+
+                if (($data['deaf'] == "on") || ($data['deaf'] == "1") || ($data['deaf'] == "true")) {
+                    $postfield['deaf'] = true;
+                } else {
+                    $postfield['deaf'] = false;
+                }
+
+            } else {
+                $postfield['deaf'] = $data['deaf'];
+            }
+
         }
 
         $revoke = $data;
