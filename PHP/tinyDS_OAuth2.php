@@ -196,7 +196,7 @@ class tinyDS_OAuth2
 
         curl_close($info);
 
-        if ((isset($this->refreshToken)) && ($httpcode != 200) && (isset($data['refresh'])) && (!empty($data['refresh']))) {
+        if ((is_object($this)) && ($httpcode != 200) && (isset($data['refresh'])) && (!empty($data['refresh']))) {
             $newtoken = $this->refreshToken($data['refresh']);
         } else{
             $newtoken = array('data' => null, 'err' => 'No Refresh Token', 'state' => 2);
