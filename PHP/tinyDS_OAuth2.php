@@ -199,7 +199,7 @@ class tinyDS_OAuth2
         if ((isset($this->refreshToken)) && ($httpcode != 200) && (isset($data['refresh'])) && (!empty($data['refresh']))) {
             $newtoken = $this->refreshToken($data['refresh']);
         } else{
-            $newtoken = array('data' => null, 'err' => 2);
+            $newtoken = array('data' => null, 'err' => 'No Refresh Token', 'state' => 2);
         }
 
         if ((!isset($newtoken['err'])) && (!isset($newtoken['data']->error))) {
