@@ -105,123 +105,147 @@ class tinyDS_OAuth2
     public function getToken($data)
     {
 
-        if (is_string($data)) {
+        if (function_exists("curl_init")) {
 
-            $code = $data;
-            $secret = $this->secret;
-            $id = $this->id;
-            $redirect = $this->redirect;
+            if (is_string($data)) {
+
+                $code = $data;
+                $secret = $this->secret;
+                $id = $this->id;
+                $redirect = $this->redirect;
+
+            } else {
+
+                $code = $data['code'];
+
+                if (!isset($data['secret'])) {$secret = $this->secret;} else {
+                    $secret = $data['secret'];
+                }
+
+                if (!isset($data['id'])) {$id = $this->id;} else {
+                    $id = $data['id'];
+                }
+
+                if (!isset($data['redirect'])) {$redirect = $this->redirect;} else {
+                    $redirect = $data['redirect'];
+                }
+
+            }
+
+            $info = curl_init();
+
+            curl_setopt_array($info, array(
+                CURLOPT_URL => "https://discordapp.com/api/oauth2/token",
+                CURLOPT_POST => 1,
+                CURLOPT_POSTFIELDS => array(
+                    "grant_type" => "authorization_code",
+                    "client_id" => $id,
+                    "client_secret" => $secret,
+                    "redirect_uri" => $redirect,
+                    "code" => $code,
+                ),
+                CURLOPT_RETURNTRANSFER => true,
+            ));
+
+            $tinyresult = curl_exec($info);
+            if ($tinyresult == false) {
+                $tinyerror = curl_error($info);
+            } else {
+                $tinyerror = null;
+                $tinyresult = json_decode($tinyresult);
+            }
+
+            $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+
+            curl_close($info);
+
+            $this->expire = (int) $tinyresult->expires_in;
+
+            return array(
+                "data" => $tinyresult,
+                "err" => $tinyerror,
+                "state" => $httpcode,
+            );
 
         } else {
 
-            $code = $data['code'];
-
-            if (!isset($data['secret'])) {$secret = $this->secret;} else {
-                $secret = $data['secret'];
-            }
-
-            if (!isset($data['id'])) {$id = $this->id;} else {
-                $id = $data['id'];
-            }
-
-            if (!isset($data['redirect'])) {$redirect = $this->redirect;} else {
-                $redirect = $data['redirect'];
-            }
+            return array(
+                "data" => null,
+                "err" => "cURL is required!",
+                "state" => 9999,
+            );
 
         }
-
-        $info = curl_init();
-
-        curl_setopt_array($info, array(
-            CURLOPT_URL => "https://discordapp.com/api/oauth2/token",
-            CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => array(
-                "grant_type" => "authorization_code",
-                "client_id" => $id,
-                "client_secret" => $secret,
-                "redirect_uri" => $redirect,
-                "code" => $code,
-            ),
-            CURLOPT_RETURNTRANSFER => true,
-        ));
-
-        $tinyresult = curl_exec($info);
-        if ($tinyresult == false) {
-            $tinyerror = curl_error($info);
-        } else {
-            $tinyerror = null;
-            $tinyresult = json_decode($tinyresult);
-        }
-
-        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
-
-        curl_close($info);
-
-        $this->expire = (int) $tinyresult->expires_in;
-
-        return array(
-            "data" => $tinyresult,
-            "err" => $tinyerror,
-            "state" => $httpcode,
-        );
 
     }
 
     public function getUser($data)
     {
 
-        if (!isset($data['timeout'])) {
-            $data['timeout'] = 1;
-        }
+        if (function_exists("curl_init")) {
 
-        $info = curl_init();
-        curl_setopt_array($info, array(
-            CURLOPT_URL => "https://discordapp.com/api/" . $data['type'],
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: Bearer " . $data['token'],
-            ),
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => $data['timeout'],
-        ));
-
-        $tinyresult = curl_exec($info);
-        if ($tinyresult == false) {
-            $tinyerror = curl_error($info);
-        } else {
-            $tinyerror = null;
-            $tinyresult = json_decode($tinyresult, true);
-        }
-
-        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
-
-        curl_close($info);
-
-        if ((is_object($this)) && ($httpcode != 200) && (isset($data['refresh'])) && (!empty($data['refresh']))) {
-            $newtoken = $this->refreshToken($data['refresh']);
-        } else{
-            $newtoken = array('data' => null, 'err' => 'No Refresh Token', 'state' => 2);
-        }
-
-        if ((!isset($newtoken['err'])) && (!isset($newtoken['data']->error))) {
-        
-            return $this->getUser(array(
-                'token' => $newtoken['data']->access_token, 'type' => $data['type'], 'refreshToken' => $newtoken,
-            ));
-        
-        }
-         else {
-
-            if (!isset($data['refreshToken'])) {
-                $data['refreshToken'] = '';
+            if (!isset($data['timeout'])) {
+                $data['timeout'] = 1;
             }
 
-            return array(
-                "data" => $tinyresult,
-                "err" => $tinyerror,
-                "state" => $httpcode,
-                "refresh" => $data['refreshToken'],
-            );
+            $info = curl_init();
+            curl_setopt_array($info, array(
+                CURLOPT_URL => "https://discordapp.com/api/" . $data['type'],
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: Bearer " . $data['token'],
+                ),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => $data['timeout'],
+            ));
 
+            $tinyresult = curl_exec($info);
+            if ($tinyresult == false) {
+                $tinyerror = curl_error($info);
+            } else {
+                $tinyerror = null;
+                $tinyresult = json_decode($tinyresult, true);
+            }
+
+            $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+
+            curl_close($info);
+
+            if ((is_object($this)) && ($httpcode != 200) && (isset($data['refresh'])) && (!empty($data['refresh']))) {
+                $newtoken = $this->refreshToken($data['refresh']);
+            } else {
+                $newtoken = array('data' => null, 'err' => 'No Refresh Token', 'state' => 2);
+            }
+
+            if ((!isset($newtoken['err'])) && (!isset($newtoken['data']->error))) {
+
+                return $this->getUser(array(
+                    'token' => $newtoken['data']->access_token, 'type' => $data['type'], 'refreshToken' => $newtoken,
+                ));
+
+            } else {
+
+                if (!isset($data['refreshToken'])) {
+                    $data['refreshToken'] = '';
+                }
+
+                return array(
+                    "data" => $tinyresult,
+                    "err" => $tinyerror,
+                    "state" => $httpcode,
+                    "refresh" => $data['refreshToken'],
+                );
+
+            }
+
+        } else{
+
+            return array(
+                "data" => null,
+                "err" => "cURL is required!",
+                "state" => 9999,
+                "refresh" => null
+            );
+    
         }
 
     }
@@ -229,104 +253,116 @@ class tinyDS_OAuth2
     public function addGuildMember($data)
     {
 
-        $postfield = array(
-            "access_token" => $data['token'],
-        );
+        if (function_exists("curl_init")) {
 
-        if (isset($data['nick'])) {
-            $postfield['nick'] = $data['nick'];
-        }
+            $postfield = array(
+                "access_token" => $data['token'],
+            );
 
-        if (isset($data['roles'])) {
-
-            if ((!is_array($data['roles'])) && (is_string($data['roles']))) {
-                $postfield['roles'] = $data['roles'] = explode(",", preg_replace('/\s+/', '', $data['roles']));
-            } else {
-                $postfield['roles'] = $data['roles'];
+            if (isset($data['nick'])) {
+                $postfield['nick'] = $data['nick'];
             }
 
-        }
+            if (isset($data['roles'])) {
 
-        if (isset($data['mute'])) {
-
-            if ((!is_bool($data['mute'])) && (is_string($data['mute']))) {
-
-                if (($data['mute'] == "on") || ($data['mute'] == "1") || ($data['mute'] == "true")) {
-                    $postfield['mute'] = true;
+                if ((!is_array($data['roles'])) && (is_string($data['roles']))) {
+                    $postfield['roles'] = $data['roles'] = explode(",", preg_replace('/\s+/', '', $data['roles']));
                 } else {
-                    $postfield['mute'] = false;
+                    $postfield['roles'] = $data['roles'];
                 }
 
-            } else {
-                $postfield['mute'] = $data['mute'];
             }
 
-        }
+            if (isset($data['mute'])) {
 
-        if (isset($data['deaf'])) {
+                if ((!is_bool($data['mute'])) && (is_string($data['mute']))) {
 
-            if ((!is_bool($data['deaf'])) && (is_string($data['deaf']))) {
+                    if (($data['mute'] == "on") || ($data['mute'] == "1") || ($data['mute'] == "true")) {
+                        $postfield['mute'] = true;
+                    } else {
+                        $postfield['mute'] = false;
+                    }
 
-                if (($data['deaf'] == "on") || ($data['deaf'] == "1") || ($data['deaf'] == "true")) {
-                    $postfield['deaf'] = true;
                 } else {
-                    $postfield['deaf'] = false;
+                    $postfield['mute'] = $data['mute'];
                 }
 
-            } else {
-                $postfield['deaf'] = $data['deaf'];
             }
 
+            if (isset($data['deaf'])) {
+
+                if ((!is_bool($data['deaf'])) && (is_string($data['deaf']))) {
+
+                    if (($data['deaf'] == "on") || ($data['deaf'] == "1") || ($data['deaf'] == "true")) {
+                        $postfield['deaf'] = true;
+                    } else {
+                        $postfield['deaf'] = false;
+                    }
+
+                } else {
+                    $postfield['deaf'] = $data['deaf'];
+                }
+
+            }
+
+            $revoke = $data;
+            $info = curl_init();
+
+            curl_setopt_array($info, array(
+                CURLOPT_URL => "https://discordapp.com/guilds/" . $data['guildID'] . "/members/" . $data['userID'],
+                CURLOPT_CUSTOMREQUEST => "PUT",
+                CURLOPT_POSTFIELDS => $postfield,
+                CURLOPT_RETURNTRANSFER => true,
+            ));
+
+            curl_exec($info);
+            $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+
+            curl_close($info);
+
+            return $httpcode;
+
+        } else{
+            return "cURL is required!";
         }
-
-        $revoke = $data;
-        $info = curl_init();
-
-        curl_setopt_array($info, array(
-            CURLOPT_URL => "https://discordapp.com/guilds/" . $data['guildID'] . "/members/" . $data['userID'],
-            CURLOPT_CUSTOMREQUEST => "PUT",
-            CURLOPT_POSTFIELDS => $postfield,
-            CURLOPT_RETURNTRANSFER => true,
-        ));
-
-        curl_exec($info);
-        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
-
-        curl_close($info);
-
-        return $httpcode;
 
     }
 
     public function addtoGroupDM($token, $channelID, $userID, $nick = null)
     {
 
-        if (!isset($nick)) {
-            $postfield = array(
-                "access_token" => $token,
-            );
-        } else {
-            $postfield = array(
-                "access_token" => $token,
-                "nick" => $nick,
-            );
+        if (function_exists("curl_init")) {
+
+            if (!isset($nick)) {
+                $postfield = array(
+                    "access_token" => $token,
+                );
+            } else {
+                $postfield = array(
+                    "access_token" => $token,
+                    "nick" => $nick,
+                );
+            }
+
+            $info = curl_init();
+
+            curl_setopt_array($info, array(
+                CURLOPT_URL => "https://discordapp.com/channels/" . $channelID . "/recipients/" . $userID,
+                CURLOPT_CUSTOMREQUEST => "PUT",
+                CURLOPT_POSTFIELDS => $postfield,
+                CURLOPT_RETURNTRANSFER => true,
+            ));
+
+            curl_exec($info);
+            $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+
+            curl_close($info);
+
+            return $httpcode;
+
+        } else{
+            return "cURL is required!";
         }
-
-        $info = curl_init();
-
-        curl_setopt_array($info, array(
-            CURLOPT_URL => "https://discordapp.com/channels/" . $channelID . "/recipients/" . $userID,
-            CURLOPT_CUSTOMREQUEST => "PUT",
-            CURLOPT_POSTFIELDS => $postfield,
-            CURLOPT_RETURNTRANSFER => true,
-        ));
-
-        curl_exec($info);
-        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
-
-        curl_close($info);
-
-        return $httpcode;
 
     }
 
@@ -364,89 +400,107 @@ class tinyDS_OAuth2
     public function refreshToken($data = null)
     {
 
-        if (is_string($data)) {
+        if (function_exists("curl_init")) {
 
-            $refresh = $data;
-            $secret = $this->secret;
-            $id = $this->id;
-            $redirect = $this->redirect;
-            $scope = $this->getScope($this->scope, 1);
+            if (is_string($data)) {
 
-        } else {
+                $refresh = $data;
+                $secret = $this->secret;
+                $id = $this->id;
+                $redirect = $this->redirect;
+                $scope = $this->getScope($this->scope, 1);
 
-            $refresh = $data['refresh'];
+            } else {
 
-            if (!isset($data['secret'])) {$secret = $this->secret;} else {
-                $secret = $data['secret'];
+                $refresh = $data['refresh'];
+
+                if (!isset($data['secret'])) {$secret = $this->secret;} else {
+                    $secret = $data['secret'];
+                }
+
+                if (!isset($data['id'])) {$id = $this->id;} else {
+                    $id = $data['id'];
+                }
+
+                if (!isset($data['redirect'])) {$redirect = $this->redirect;} else {
+                    $redirect = $data['redirect'];
+                }
+
+                if (!isset($data['scope'])) {$scope = $this->getScope($this->scope, 1);} else {
+                    $scope = $this->getScope($data['scope'], 1);
+                }
+
             }
 
-            if (!isset($data['id'])) {$id = $this->id;} else {
-                $id = $data['id'];
+            $info = curl_init();
+
+            curl_setopt_array($info, array(
+                CURLOPT_URL => "https://discordapp.com/api/oauth2/token",
+                CURLOPT_POST => 1,
+                CURLOPT_POSTFIELDS => array(
+                    "grant_type" => "refresh_token",
+                    "client_id" => $id,
+                    "client_secret" => $secret,
+                    "redirect_uri" => $redirect,
+                    "refresh_token" => $refresh,
+                    "scope" => $scope,
+                ),
+                CURLOPT_RETURNTRANSFER => true,
+            ));
+
+            $tinyresult = curl_exec($info);
+            if ($tinyresult == false) {
+                $tinyerror = curl_error($info);
+            } else {
+                $tinyerror = null;
+                $tinyresult = json_decode($tinyresult);
             }
 
-            if (!isset($data['redirect'])) {$redirect = $this->redirect;} else {
-                $redirect = $data['redirect'];
-            }
+            $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
 
-            if (!isset($data['scope'])) {$scope = $this->getScope($this->scope, 1);} else {
-                $scope = $this->getScope($data['scope'], 1);
-            }
+            curl_close($info);
 
+            return array(
+                "data" => $tinyresult,
+                "err" => $tinyerror,
+                "state" => $httpcode,
+            );
+
+        } else{
+
+            return array(
+                "data" => null,
+                "err" => "cURL is required!",
+                "state" => 9999,
+            );
+    
         }
-
-        $info = curl_init();
-
-        curl_setopt_array($info, array(
-            CURLOPT_URL => "https://discordapp.com/api/oauth2/token",
-            CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => array(
-                "grant_type" => "refresh_token",
-                "client_id" => $id,
-                "client_secret" => $secret,
-                "redirect_uri" => $redirect,
-                "refresh_token" => $refresh,
-                "scope" => $scope,
-            ),
-            CURLOPT_RETURNTRANSFER => true,
-        ));
-
-        $tinyresult = curl_exec($info);
-        if ($tinyresult == false) {
-            $tinyerror = curl_error($info);
-        } else {
-            $tinyerror = null;
-            $tinyresult = json_decode($tinyresult);
-        }
-
-        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
-
-        curl_close($info);
-
-        return array(
-            "data" => $tinyresult,
-            "err" => $tinyerror,
-            "state" => $httpcode,
-        );
 
     }
 
     public function revokeToken($data)
     {
 
-        $revoke = $data;
-        $info = curl_init();
+        if (function_exists("curl_init")) {
 
-        curl_setopt_array($info, array(
-            CURLOPT_URL => "https://discordapp.com/api/oauth2/token/revoke?token=" . $revoke,
-            CURLOPT_RETURNTRANSFER => true,
-        ));
+            $revoke = $data;
+            $info = curl_init();
 
-        curl_exec($info);
-        $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
+            curl_setopt_array($info, array(
+                CURLOPT_URL => "https://discordapp.com/api/oauth2/token/revoke?token=" . $revoke,
+                CURLOPT_RETURNTRANSFER => true,
+            ));
 
-        curl_close($info);
+            curl_exec($info);
+            $httpcode = curl_getinfo($info, CURLINFO_HTTP_CODE);
 
-        return $httpcode;
+            curl_close($info);
+
+            return $httpcode;
+
+        } else{
+            return "cURL is required!";
+        }
 
     }
 
