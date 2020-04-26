@@ -1,0 +1,4 @@
+PHP Updates:
+
+- getURL is getOAuth2URL now.
+- getToken is getUserToken now.
