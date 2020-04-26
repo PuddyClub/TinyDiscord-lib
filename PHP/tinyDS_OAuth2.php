@@ -26,6 +26,7 @@ class tinyDS_OAuth2
     protected $token;
     protected $expire;
 
+    /* Get Scope */
     public function getScope($data = null, $type = 0)
     {
 
@@ -50,6 +51,7 @@ class tinyDS_OAuth2
 
     }
 
+    /* Constructor */
     public function __construct($data)
     {
 
@@ -77,7 +79,8 @@ class tinyDS_OAuth2
 
     }
 
-    public function getURL($data = null)
+    /* Get oAuth2 URL */
+    public function getOAuth2URL($data = null)
     {
 
         if (!isset($data)) {

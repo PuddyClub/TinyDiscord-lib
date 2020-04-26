@@ -43,7 +43,7 @@ $tinyDiscord = new tinyDS_OAuth2(
 Use this function to return your URL
 
 ```php
-$tinyDiscord->getURL();
+$tinyDiscord->getOAuth2URL();
 ```
 
 ### Get State
@@ -389,7 +389,7 @@ tinyDS_OAuth2::getUser(array(
 
         // Send the user into the Discord OAuth2
         $_SESSION['oauth2state'] = $tinyDiscord->getState();
-        header('Location: ' . $tinyDiscord->getURL());
+        header('Location: ' . $tinyDiscord->getOAuth2URL());
 
     }
 
