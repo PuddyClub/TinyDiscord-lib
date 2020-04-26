@@ -23,6 +23,7 @@ class tinyDS_OAuth2
     protected $redirect;
     protected $secret;
     protected $state;
+    protected $token;
     protected $expire;
 
     public function getScope($data = null, $type = 0)
@@ -67,6 +68,9 @@ class tinyDS_OAuth2
         if (isset($data['secret'])) {
             $this->secret = $data['secret'];
         }
+        if (isset($data['token'])) {
+            $this->secret = $data['token'];
+        }
         if (isset($data['state'])) {
             $this->state = $data['state'];
         }
@@ -102,7 +106,7 @@ class tinyDS_OAuth2
 
     }
 
-    public function getToken($data)
+    public function getUserToken($data)
     {
 
         if (function_exists("curl_init")) {

@@ -23,6 +23,8 @@ redirect: The redirect URL
 
 state: Protection for your OAuth2
 
+token: The Token ID
+
 ```php 
 $tinyDiscord = new tinyDS_OAuth2(
     array(
@@ -59,14 +61,14 @@ Use this function to get your token
 code: The code result from the OAuth2 Page
 
 ```php
-$tinyDiscord->getToken($_GET['code']);
+$tinyDiscord->getUserToken($_GET['code']);
 ```
 
 ### Refresh Token
 
 Use this function to refresh your token
 
-refresh: The token refresh code received from getToken
+refresh: The token refresh code received from getUserToken
 
 ```php
 $token = $tinyDiscord->refreshToken($_GET['refresh']);
@@ -76,7 +78,7 @@ $token = $tinyDiscord->refreshToken($_GET['refresh']);
 
 Use this function to revoke your token. The value returned is the HTTP Code
 
-revoke: The token code received from getToken
+revoke: The token code received from getUserToken
 
 ```php
 $revoke = tinyDS_OAuth2::revokeToken($_GET['revoke']);
@@ -86,7 +88,7 @@ $revoke = tinyDS_OAuth2::revokeToken($_GET['revoke']);
 
 Use this function to add users into a DM. The value returned is the HTTP Code
 
-addtoGroupDM: The token code received from getToken
+addtoGroupDM: The token code received from getUserToken
 
 channelID: The channel ID
 
@@ -107,7 +109,7 @@ $addtoGroupDM = tinyDS_OAuth2::addtoGroupDM(
 
 Use this function to add users into a Guild. The value returned is the HTTP Code
 
-revoke: The token code received from getToken
+revoke: The token code received from getUserToken
 
 nick: User Nickname (Optional)
 
@@ -344,7 +346,7 @@ tinyDS_OAuth2::getUser(array(
         } else {
 
             // Get the user token
-            $token = $tinyDiscord->getToken($_GET['code']);
+            $token = $tinyDiscord->getUserToken($_GET['code']);
 
             if ((!isset($token['err'])) && (!isset($token['data']->error))) {
 
