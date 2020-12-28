@@ -11,7 +11,7 @@
  *
  ***************************************************************************/
 
-// https://discordapp.com/developers/docs/topics/oauth2
+// https://discord.com/developers/docs/topics/oauth2
 // https://discordapi.com/permissions.html
 
 class tinyDS_OAuth2
@@ -105,7 +105,7 @@ class tinyDS_OAuth2
             $state = '';
         }
 
-        return "https://discordapp.com/oauth2/authorize?client_id=" . $data['clientID'] . "&scope=" . $scope . $state . "&response_type=code&redirect_uri=" . urlencode($data['redirect']) . "&permissions=" . $data['permissions'];
+        return "https://discord.com/oauth2/authorize?client_id=" . $data['clientID'] . "&scope=" . $scope . $state . "&response_type=code&redirect_uri=" . urlencode($data['redirect']) . "&permissions=" . $data['permissions'];
 
     }
 
@@ -142,7 +142,7 @@ class tinyDS_OAuth2
             $info = curl_init();
 
             curl_setopt_array($info, array(
-                CURLOPT_URL => "https://discordapp.com/api/oauth2/token",
+                CURLOPT_URL => "https://discord.com/api/oauth2/token",
                 CURLOPT_POST => 1,
                 CURLOPT_POSTFIELDS => array(
                     "grant_type" => "authorization_code",
@@ -197,7 +197,7 @@ class tinyDS_OAuth2
 
             $info = curl_init();
             curl_setopt_array($info, array(
-                CURLOPT_URL => "https://discordapp.com/api/" . $data['type'],
+                CURLOPT_URL => "https://discord.com/api/" . $data['type'],
                 CURLOPT_HTTPHEADER => array(
                     "Authorization: Bearer " . $data['token'],
                 ),
@@ -316,7 +316,7 @@ class tinyDS_OAuth2
             $info = curl_init();
 
             curl_setopt_array($info, array(
-                CURLOPT_URL => "https://discordapp.com/guilds/" . $data['guildID'] . "/members/" . $data['userID'],
+                CURLOPT_URL => "https://discord.com/guilds/" . $data['guildID'] . "/members/" . $data['userID'],
                 CURLOPT_CUSTOMREQUEST => "PUT",
                 CURLOPT_POSTFIELDS => $postfield,
                 CURLOPT_RETURNTRANSFER => true,
@@ -354,7 +354,7 @@ class tinyDS_OAuth2
             $info = curl_init();
 
             curl_setopt_array($info, array(
-                CURLOPT_URL => "https://discordapp.com/channels/" . $channelID . "/recipients/" . $userID,
+                CURLOPT_URL => "https://discord.com/channels/" . $channelID . "/recipients/" . $userID,
                 CURLOPT_CUSTOMREQUEST => "PUT",
                 CURLOPT_POSTFIELDS => $postfield,
                 CURLOPT_RETURNTRANSFER => true,
@@ -442,7 +442,7 @@ class tinyDS_OAuth2
             $info = curl_init();
 
             curl_setopt_array($info, array(
-                CURLOPT_URL => "https://discordapp.com/api/oauth2/token",
+                CURLOPT_URL => "https://discord.com/api/oauth2/token",
                 CURLOPT_POST => 1,
                 CURLOPT_POSTFIELDS => array(
                     "grant_type" => "refresh_token",
@@ -494,7 +494,7 @@ class tinyDS_OAuth2
             $info = curl_init();
 
             curl_setopt_array($info, array(
-                CURLOPT_URL => "https://discordapp.com/api/oauth2/token/revoke?token=" . $revoke,
+                CURLOPT_URL => "https://discord.com/api/oauth2/token/revoke?token=" . $revoke,
                 CURLOPT_RETURNTRANSFER => true,
             ));
 
